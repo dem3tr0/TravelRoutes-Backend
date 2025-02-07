@@ -1,3 +1,5 @@
+from django.utils import timezone
+from rest_framework import status
 from app.settings import SECRET_KEY
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -20,6 +22,9 @@ class LoginView(APIView):
         email = request.data['email']
         password = request.data['password']
 
+        if email is None or password is None:
+            return Response({'error': 'Missing email or password'}, status=status.HTTP_400_BAD_REQUEST)
+
         user = User.objects.filter(email=email).first()
 
         if user is None:
@@ -30,8 +35,8 @@ class LoginView(APIView):
 
         payload = {
             'id': user.id,
-            'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.now(datetime.UTC),
+            'exp': timezone.now() + datetime.timedelta(minutes=60),
+            'iat': timezone.now()
         }
 
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')

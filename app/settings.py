@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'simple_history',
     'corsheaders',
     'authentication',
+    'travel_routes',
     'rest_framework',
 ]
 
@@ -82,10 +84,10 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'travelRoutes',
-        'USER': 'postgres',
+        'NAME': 'travelroutes',
+        'USER': 'dem3tr0_db',
         'PASSWORD': 'dk616123',
-        'HOST': 'localhost',
+        'HOST': '87.225.97.62',
         'PORT': '5432',
     }
 }

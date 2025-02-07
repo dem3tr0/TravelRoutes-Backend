@@ -1,24 +1,24 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator, MaxValueValidator
+from simple_history.models import HistoricalRecords
+from authentication.models import User
 
-class Users(models.Model):
+
+#class Photo(models.Model):
+    #image = models.ImageField(upload_to='images/')
+
+
+class Route(models.Model):
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=30)
-    email = models.EmailField()
-    password = models.CharField(max_length=20)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.username
-
-class Routes(models.Model):
-    id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    #preview = models.ForeignKey(Photo, on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    history = HistoricalRecords()
     points = ArrayField(
         ArrayField(
             models.DecimalField(
@@ -35,40 +35,15 @@ class Routes(models.Model):
     )
     likes = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.title
-
-
-class AllRoutes(models.Model):
-    id = models.AutoField(primary_key=True)
-    parent_route_id = models.IntegerField(default=0)
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    is_private = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    points = ArrayField(
-        ArrayField(
-            models.DecimalField(
-                max_digits=22,
-                decimal_places=19,
-                validators=[
-                    MinValueValidator(-180),
-                    MaxValueValidator(180)
-                ]
-            ),
-            size=2
-        ),
-        default=list
-    )
-    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
 
 
-class Reviews(models.Model):
+class Review(models.Model):
     id = models.AutoField(primary_key=True)
-    route_id = models.ForeignKey(Routes, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
     rating = models.IntegerField(default=5, validators=[
         MinValueValidator(1),
         MaxValueValidator(5)
