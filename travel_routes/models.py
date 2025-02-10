@@ -10,7 +10,6 @@ from authentication.models import User
 
 
 class Route(models.Model):
-    id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1000, blank=True, null=True)
@@ -33,7 +32,6 @@ class Route(models.Model):
         ),
         default=list
     )
-    likes = models.IntegerField(default=0)
 
 
     def __str__(self):
@@ -41,7 +39,6 @@ class Route(models.Model):
 
 
 class Review(models.Model):
-    id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
     rating = models.IntegerField(default=5, validators=[
@@ -51,3 +48,7 @@ class Review(models.Model):
     text = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+class Likes(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
