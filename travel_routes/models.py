@@ -52,3 +52,7 @@ class Review(models.Model):
 class Likes(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
+
+
+class BannedWord(models.Model):
+    word = models.CharField(max_length=20)

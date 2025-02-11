@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import BannedWord
 
-# Register your models here.
+@admin.register(BannedWord)
+class BannedWordAdmin(admin.ModelAdmin):
+    list_display = ('word',)
+    search_fields = ('word',)
