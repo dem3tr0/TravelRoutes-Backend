@@ -5,8 +5,8 @@ from simple_history.models import HistoricalRecords
 from authentication.models import User
 
 
-#class Photo(models.Model):
-    #image = models.ImageField(upload_to='images/')
+# class Photo(models.Model):
+#     image = models.ImageField(upload_to='images/')
 
 
 class Route(models.Model):
