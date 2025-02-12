@@ -26,6 +26,8 @@ def route_moderation(charfield1, charfield2):
             "detail": "Заголовок не прошел проверку."
         }, status.HTTP_400_BAD_REQUEST)
 
+
+
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
@@ -37,6 +39,10 @@ class RouteViewSet(viewsets.ModelViewSet):
     # Сортировка по created_at вида: "GET http://127.0.0.1:8000/routes/?ordering=-created_at"
     ordering_backends = [OrderingFilter]
     ordering_fields = ['created_at']
+
+    def perform_create(self, serializer):
+        #Автоподстановка id пользователя
+        serializer.save(user_id=self.request.user)
 
     def create(self, request, *args, **kwargs):
         description = request.data['description']
@@ -77,6 +83,7 @@ class RouteViewSet(viewsets.ModelViewSet):
     #permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
+
 class RouteHistoryViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteHistorySerializer
@@ -87,6 +94,8 @@ class RouteHistoryViewSet(viewsets.ModelViewSet):
 
     #permission_classes = (IsAuthenticatedOrReadOnly, )
 
+
+
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -94,6 +103,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
     # Сортировка по created_at вида: "GET http://127.0.0.1:8000/routes/?ordering=-created_at"
     ordering_backends = [OrderingFilter]
     ordering_fields = ['route_id']
+
+    def perform_create(self, serializer):
+        #Автоподстановка id пользователя
+        serializer.save(user_id=self.request.user)
 
     def create(self, request, *args, **kwargs):
         text = request.data['text']
