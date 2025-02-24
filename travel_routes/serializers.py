@@ -1,9 +1,13 @@
 from rest_framework import serializers
-from .models import Route, Review
+from .models import Route, Review, Photo
 
 
 Route_History = Route.history.model
 
+class PhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = '__all__'
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:

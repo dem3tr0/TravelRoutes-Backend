@@ -82,6 +82,7 @@ class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
 
+    # Поиск по user_id вида: "GET http://127.0.0.1:8000//?user_id=3"
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user_id']
 
