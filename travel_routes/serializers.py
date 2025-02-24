@@ -1,26 +1,18 @@
 from rest_framework import serializers
 from .models import Route, Review
 
+
+Route_History = Route.history.model
+
+
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
-        """
-        # При вызове сериализатора для уникального маршрута, нам не нужно получать
-
-        """
         model = Route
-        fields = [
-            'user_id',
-            'title',
-            'description',
-            'is_private',
-            'created_at',
-            'updated_at',
-            'points',
-        ]
+        fields = '__all__'
 
 class RouteHistorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Route
+        model = Route_History
         fields = '__all__'
 
 class ReviewSerializer(serializers.ModelSerializer):

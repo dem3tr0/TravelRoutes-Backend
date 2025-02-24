@@ -16,6 +16,20 @@ from .serializers import (
 
 moderation = Moderation()
 
+def route_moderation(charfield1, charfield2):
+    if charfield1 is None or charfield2 is None:
+        raise ValidationError("Поля 'description' и 'title' обязательны.")
+
+    if not moderation.moderate(charfield1):
+        return Response({
+            "detail": "Описание не прошло проверку."
+        }, status.HTTP_400_BAD_REQUEST)
+
+    elif not moderation.moderate(charfield2):
+        return Response({
+            "detail": "Заголовок не прошел проверку."
+        }, status.HTTP_400_BAD_REQUEST)
+
 class RouteViewSet(viewsets.ModelViewSet):
     queryset = Route.objects.all()
     serializer_class = RouteSerializer
@@ -32,18 +46,7 @@ class RouteViewSet(viewsets.ModelViewSet):
         description = request.data['description']
         title = request.data['title']
 
-        if description is None or title is None:
-            raise ValidationError("Поля 'description' и 'title' обязательны.")
-
-        if not moderation.moderate(description):
-            return Response({
-                "detail": "Описание не прошло проверку."
-            }, status.HTTP_400_BAD_REQUEST)
-
-        elif not moderation.moderate(title):
-            return Response({
-                "detail": "Заголовок не прошел проверку."
-            }, status.HTTP_400_BAD_REQUEST)
+        route_moderation(description, title) #Модерация
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -53,6 +56,27 @@ class RouteViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def update(self, request, *args, **kwargs):
+        description = request.data['description']
+        title = request.data['title']
+
+        route_moderation(description, title)  # Модерация
+
+        route = self.get_object()
+        response = super().update(request, *args, **kwargs)
+
+        return response
+
+    def partial_update(self, request, *args, **kwargs):
+        description = request.data['description']
+        title = request.data['title']
+
+        route_moderation(description, title)  # Модерация
+
+        route = self.get_object()
+        response = super().update(request, *args, **kwargs)
+
+        return response
 
 class PhotoViewSet(viewsets.ModelViewSet):
     queryset = Photo.objects.all()
