@@ -5,15 +5,10 @@ from simple_history.models import HistoricalRecords
 from authentication.models import User
 
 
-#class Photo(models.Model):
-    #image = models.ImageField(upload_to='images/')
-
-
 class Route(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    #preview = models.ForeignKey(Photo, on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -47,6 +42,11 @@ class Review(models.Model):
     ])
     text = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Photo(models.Model):
+    image = models.ImageField(upload_to='images/')
+    route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
 
 
 class Likes(models.Model):

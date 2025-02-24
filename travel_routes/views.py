@@ -5,9 +5,13 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from .models import Route, Review
-from .serializers import RouteSerializer, ReviewSerializer, RouteHistorySerializer
+from .models import Route, Review, Photo
 from .moderation import Moderation
+from .serializers import (
+    RouteSerializer,
+    ReviewSerializer,
+    RouteHistorySerializer,
+    PhotoSerializer )
 
 
 moderation = Moderation()
@@ -50,7 +54,12 @@ class RouteViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-    #permission_classes = (IsAuthenticatedOrReadOnly, )
+class PhotoViewSet(viewsets.ModelViewSet):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['user_id']
 
 
 class RouteHistoryViewSet(viewsets.ModelViewSet):
@@ -61,7 +70,6 @@ class RouteHistoryViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['user_id']
 
-    #permission_classes = (IsAuthenticatedOrReadOnly, )
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
@@ -86,10 +94,3 @@ class ReviewViewSet(viewsets.ModelViewSet):
         # Возврат успешного ответа с данными созданного объекта
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    #permission_classes = (IsAuthenticatedOrReadOnly, )
-
-# class LikesViewSet(viewsets.ViewSet):
-#     def list(self, request, search_route_id):
-#         likes = Likes.objects.filter(route_id=search_route_id)
-#     permission_classes = (IsAuthenticatedOrReadOnly, )
