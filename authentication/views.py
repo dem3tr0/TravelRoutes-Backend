@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer
 from .models import User
+from django.db.models import Q
 import datetime
 import jwt
 
@@ -19,17 +20,15 @@ class SignUpView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        email = request.data['email']
+        identifier = request.data['identifier']
         password = request.data['password']
 
-        if email is None or password is None:
-            return Response({'error': 'Missing email or password'}, status=status.HTTP_400_BAD_REQUEST)
+        if not identifier or not password:
+            return Response({'error': 'Missing email/username or password'}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.filter(email=email).first()
+        user = User.objects.filter(Q(email=identifier) | Q(username=identifier)).first()
 
-
-
-        if user is None:
+        if not user:
             raise AuthenticationFailed('User not found')
 
         if not user.check_password(password):

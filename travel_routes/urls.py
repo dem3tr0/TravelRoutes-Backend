@@ -4,23 +4,15 @@ from .views import (
     RouteViewSet,
     RouteHistoryViewSet,
     ReviewViewSet,
-    PhotoViewSet)
+    PhotoViewSet
+)
 
-
-"""
-Как сделать, чтобы мы обращаясь по одному роуту получали и роут
-и превью к нему одновременно (так удобнее фронтам). Пока костыли.
-"""
 router = DefaultRouter()
-router.register('routes', RouteViewSet)
-router.register('routes_history', RouteHistoryViewSet)
-router.register('reviews', ReviewViewSet)
-router.register('route_preview', PhotoViewSet)
+router.register(r'routes', RouteViewSet, basename='route')
+router.register(r'history_routes', RouteHistoryViewSet, basename='history_route')
+router.register(r'reviews', ReviewViewSet, basename='review')
+router.register(r'photos', PhotoViewSet, basename='photo')
 
 urlpatterns = [
-    path('routes', include(router.urls)),
-    #path('routes/<int:route_id>/likes', ),
-    path('routes_history', include(router.urls)),
-    path('reviews', include(router.urls)),
-    path('photos', include(router.urls)),
+    path('', include(router.urls)),  # Подключаем все маршруты, созданные роутером
 ]

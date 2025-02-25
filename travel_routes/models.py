@@ -28,6 +28,12 @@ class Route(models.Model):
     )
 
 
+    @property
+    def average_rating(self):
+        average = self.reviews.aggregate(avg_rating=models.Avg('rating'))['avg_rating']
+        return average if average is not None else 0
+    
+    
     def __str__(self):
         return self.title
 
@@ -51,7 +57,4 @@ class Photo(models.Model):
 class Likes(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
-
-
-class BannedWord(models.Model):
-    word = models.CharField(max_length=20)
+    
