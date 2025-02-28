@@ -44,6 +44,19 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
@@ -71,9 +84,9 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'travelrts',
+        'NAME': 'travelRoutes',
         'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'PASSWORD': 'dk616123',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -98,7 +111,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+CORS_ALLOWED_ORIGINS = [
+       "http://localhost:3000",
+]
+   
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 

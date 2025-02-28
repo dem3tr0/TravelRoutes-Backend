@@ -9,6 +9,7 @@ from .models import User
 from django.db.models import Q
 import datetime
 import jwt
+from django.conf import settings
 
 class SignUpView(APIView):
     def post(self, request):
@@ -46,6 +47,7 @@ class LoginView(APIView):
         response.set_cookie('token', value=token, httponly=True)
         response.data = {
             'token': token,
+            'userId': user.id,
         }
 
         return response
@@ -53,16 +55,25 @@ class LoginView(APIView):
 
 class UserView(APIView):
     def get(self, request):
-        token = request.COOKIES.get('token')
-        if not token:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
             raise AuthenticationFailed('Unauthorized')
 
+        token = auth_header.split(' ')[1]
+        print(f"Received token: {token}")  # Логирование токена
+
         try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            print(f"Decoded payload: {payload}")  # Логирование декодированного payload
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Token expired')
+        except jwt.InvalidTokenError:
+            raise AuthenticationFailed('Invalid token')
 
         user = User.objects.filter(id=payload['id']).first()
+        if not user:
+            raise AuthenticationFailed('User not found')
+
         serializer = UserSerializer(user)
         return Response(serializer.data)
 

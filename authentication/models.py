@@ -21,7 +21,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 class User(AbstractBaseUser):
-    username = models.CharField(max_length=150, unique=True, default='-')
+    username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
     name = None
@@ -37,3 +37,7 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    
+
+class Avatar(models.Model):
+    photo = models.ImageField(upload_to='avatars/')

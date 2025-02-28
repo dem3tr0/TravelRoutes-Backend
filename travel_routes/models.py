@@ -50,11 +50,10 @@ class Review(models.Model):
 
 
 class Photo(models.Model):
-    image = models.ImageField(upload_to='images/')
-    route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='routes/')
+    route_id = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='photos')
 
 
 class Likes(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
-    
