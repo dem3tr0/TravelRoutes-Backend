@@ -1,4 +1,4 @@
-from rest_framework import viewsets, parsers
+from rest_framework import viewsets, parsers, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError, AuthenticationFailed
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from .models import Route, Review, Photo
+from .models import Route, Review, Photo, Likes
 from .serializers import (
     RouteSerializer,
     ReviewSerializer,
@@ -99,17 +99,15 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def get_queryset(self):
-        route_id = self.kwargs.get('route_id')
-        reviews = Review.objects.filter(route_id=route_id)
-        print(f"Отзывы для маршрута {route_id}: {list(reviews)}")  # Выводим данные
-        return reviews
-
     def perform_create(self, serializer):
         serializer.save(
             user_id=self.request.user,
             route_id=Route.objects.get(id=self.kwargs['routeId'])
         )
+
+    def get_queryset(self):
+        route_id = self.kwargs.get('route_id')
+        return Review.objects.filter(route_id=route_id)
 
 class LikeView(APIView):
     def post(self, request, route_id):

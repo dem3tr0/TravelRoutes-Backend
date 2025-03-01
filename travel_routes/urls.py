@@ -17,8 +17,9 @@ router.register(r'photos', PhotoViewSet, basename='photo')
 
 urlpatterns = [
     path('', include(router.urls)),  # Подключаем все маршруты, созданные роутером
-    path('routes/<int:route_id>/reviews/', ReviewViewSet.as_view({'get': 'list', 'post': 'create'}), name='route-reviews'),
+     path('routes/<int:route_id>/reviews/', ReviewViewSet.as_view({'post': 'create', 'get': 'list'}), name='route-reviews'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    

@@ -56,3 +56,8 @@ class Photo(models.Model):
     def __str__(self):
         return f"Photo {self.id} for Route {self.route_id.id}"
 
+
+class Likes(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    route_id = models.ForeignKey(Route, on_delete=models.CASCADE)
+    

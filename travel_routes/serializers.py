@@ -47,11 +47,13 @@ class RouteHistorySerializer(serializers.ModelSerializer):
 
 # Сериализатор для отзывов
 class ReviewSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source="user.username", read_only=True)  # Получаем никнейм пользователя
     class Meta:
         model = Review
-        fields = ['id', 'text', 'rating', 'user_name', 'user_id', 'route_id', 'created_at']
-        extra_kwargs = {'route_id': {'read_only': True}}
+        fields = ['id', 'text', 'rating', 'user_id', 'route_id', 'created_at']
+        extra_kwargs = {
+            'user_id': {'read_only': True},  # Запрещаем передачу user_id из запроса
+            'route_id': {'read_only': True},  # Запрещаем передачу route_id из запроса
+        }
 
     def validate_rating(self, value):
         if value < 1 or value > 5:
