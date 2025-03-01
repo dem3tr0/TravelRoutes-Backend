@@ -5,7 +5,7 @@ from simple_history.models import HistoricalRecords
 from authentication.models import User
 
 class Route(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='routes')
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1000, blank=True, null=True)
     is_private = models.BooleanField(default=False)
@@ -52,6 +52,9 @@ class Review(models.Model):
 class Photo(models.Model):
     image = models.ImageField(upload_to='routes/')
     route_id = models.ForeignKey(Route, on_delete=models.CASCADE, related_name='photos')
+
+    def __str__(self):
+        return f"Photo {self.id} for Route {self.route_id.id}"
 
 
 class Likes(models.Model):
